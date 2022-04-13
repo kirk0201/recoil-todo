@@ -6,9 +6,18 @@ export interface IToDo {
   category: string;
 }
 
+export const LOCAL_TODO = "LOCAL_TODO";
+export const LOCAL_CATEGORY = "LOCAL_CATEGORY";
+
+const getCategoryStorageHandler = localStorage.getItem(LOCAL_CATEGORY) || "[]";
+export const parsedCategoryStoraget = JSON.parse(getCategoryStorageHandler);
+
+const getToDoStorageHandler = localStorage.getItem(LOCAL_TODO) || "{}";
+export const parsedCategoryStorage = JSON.parse(getToDoStorageHandler);
+
 export const createCategory = atom({
   key: "createCategory",
-  default: ["TO_DO", "DOING", "DONE"],
+  default: ["TO_DO", "DOING", "DONE", ...parsedCategoryStoraget],
 });
 
 export const categoryState = atom({
@@ -17,7 +26,7 @@ export const categoryState = atom({
 });
 export const toDoState = atom<IToDo[]>({
   key: "toDoState",
-  default: [],
+  default: parsedCategoryStorage,
 });
 
 export const toDoSelector = selector({
@@ -26,6 +35,6 @@ export const toDoSelector = selector({
     const category = get(categoryState);
     const toDos = get(toDoState);
 
-    return toDos.filter((toDo) => toDo.category.includes(category));
+    // return toDos?.filter((toDo) => toDo.category.includes(category));
   },
 });

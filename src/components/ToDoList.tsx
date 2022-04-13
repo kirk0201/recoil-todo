@@ -49,9 +49,9 @@ function ToDoList() {
       <CreateToDo />
 
       <ul>
-        {toDos.map((toDo) => (
+        {/* {toDos.map((toDo) => (
           <ToDo key={toDo.id} {...toDo} />
-        ))}
+        ))} */}
       </ul>
     </div>
   );
