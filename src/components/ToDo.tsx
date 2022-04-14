@@ -1,9 +1,12 @@
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components";
 import { categoryState, createCategory, IToDo, toDoState } from "../atom";
+import { setToDoStorageHandler } from "../todo.utils";
+import { Button } from "./CreateToDo";
 
 function ToDo({ id, text }: IToDo) {
-  const setToDos = useSetRecoilState(toDoState);
+  const [getToDos, setToDos] = useRecoilState(toDoState);
   const getCategory = useRecoilValue(createCategory);
   const [getCategoryState] = useRecoilState(categoryState);
 
@@ -23,10 +26,15 @@ function ToDo({ id, text }: IToDo) {
       })
     );
   };
-
+  const deleteBtnHandler = (e: any) => {
+    setToDos((prevState) => {
+      const newArray = prevState.filter((prev) => prev.id !== id);
+      setToDoStorageHandler(newArray);
+      return newArray;
+    });
+  };
   return (
-    <li>
-      <span>{text}</span>
+    <Container>
       <select value={getCategoryState} onInput={input}>
         {getCategory.map((category, i) => (
           <option key={i} value={category}>
@@ -34,22 +42,23 @@ function ToDo({ id, text }: IToDo) {
           </option>
         ))}
       </select>
-      {/* {category !== "TO_DO" && (
-        <button name="TO_DO" onClick={onClick}>
-          TODO
-        </button>
-      )}
-      {category !== "DOING" && (
-        <button name="DOING" onClick={onClick}>
-          DOING
-        </button>
-      )}
-      {category !== "DONE" && (
-        <button name="DONE" onClick={onClick}>
-          DONE
-        </button>
-      )} */}
-    </li>
+      <span>{text}</span>
+      <Button onClick={deleteBtnHandler}>삭제</Button>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 10px 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  span {
+    display: flex;
+    align-items: center;
+  }
+`;
 export default ToDo;

@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
+import styled from "styled-components";
 import { categoryState, IToDo, toDoState } from "../atom";
 import { setToDoStorageHandler } from "../todo.utils";
 interface IForm {
@@ -11,9 +12,7 @@ function CreateToDo() {
   const [getToDos, setToDos] = useRecoilState(toDoState);
   const category = useRecoilValue(categoryState);
 
-  console.log("create", category);
   const submitHandler = (data: IForm) => {
-    console.log(data.toDo);
     setToDos((toDos) => {
       const newToDo = [
         {
@@ -23,7 +22,6 @@ function CreateToDo() {
         },
         ...toDos,
       ];
-      console.log("getToDo", newToDo);
       setToDoStorageHandler(newToDo);
       return newToDo;
     });
@@ -32,9 +30,20 @@ function CreateToDo() {
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
-      <input {...register("toDo", { required: true })}></input>
-      <button>Add</button>
+      <input
+        placeholder="TODO를 추가하세요"
+        {...register("toDo", { required: true })}
+      ></input>
+      <Button>추가</Button>
     </form>
   );
 }
+export const Button = styled.button`
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 5px 10px;
+  background-color: #348de0;
+  border-radius: 15px;
+`;
 export default CreateToDo;
